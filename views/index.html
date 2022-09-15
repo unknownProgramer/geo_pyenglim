@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3차원 캔바스 예제 1</title>
+    <title>평림댐 3D 모델링 테스트</title>
     <style>
         body {
             margin: 0;
@@ -26,67 +26,98 @@
         integrity="sha512-Mcz+Mt8k23j06ycA5EJGfyXbtzB6xqEoJxjGftQQoed/zQzem9Lt21LRymjlcm+NUsbF0LOHgfdN8LO8GtKDOw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-    // 3차원 세계
+    // 장면
     var scene = new THREE.Scene();
 
-    // Debug
+    // GUI
     const gui = new dat.GUI();
 
-    // 오브젝트 설정
-    const geometry = new THREE.PlaneBufferGeometry(3, 3, 128, 128) // segments 가 높을수록 더 세밀한 오브젝트 생성이 가능
-    const geometry_side = new THREE.PlaneBufferGeometry(3, 1, 128, 128)
-
-    // 텍스쳐 로드
+    // // 텍스쳐 로드 및 높이파일 설정
     const loader = new THREE.TextureLoader();
-    const height = loader.load('/static/height_black_02.jpg');
-    const texture = loader.load('/static/texture.jpg');
+    const height = loader.load('/static/height_black.jpg');
+
+    height.warpS = height.wrapT = THREE.RepeatWrapping;
+    // const texture = loader.load('/static/texture.jpg');
+    //
+    // Geometry                                                    // (height, width, heightSeg., widthSeg.)
+    const geometry = new THREE.PlaneBufferGeometry(1000, 1000, 128, 128) // segments 가 높을수록 더 세밀한 오브젝트 생성이 가능
+    // const geometry_side = new THREE.PlaneBufferGeometry(3, 0.5, 1, 1)
 
     // Materials
+    // 저수지 굴곡표현
     const meterial = new THREE.MeshStandardMaterial({
-        color          : 'gray',
-        map            : texture,
-        displacementMap: height
+        color          : '0x000000',
+        // map            : texture,
+        displacementMap: height,
+        wireframe: true,
+        displacementScale: 500
     });
 
-    const meterial_side = new THREE.MeshStandardMaterial({
-        color: 'gray',
-        map  : texture
-    });
+    // 양 옆 덮개 표현
+    // const meterial_side = new THREE.MeshStandardMaterial({
+    //     color: 'gray',
+    //     map  : texture
+    // });
 
+    // Materials 객체 init
     const plane = new THREE.Mesh(geometry, meterial);
-    const plane_01 = new THREE.Mesh(geometry_side, meterial_side);
-    const plane_02 = new THREE.Mesh(geometry_side, meterial_side);
-    const plane_03 = new THREE.Mesh(geometry_side, meterial_side);
-    const plane_04 = new THREE.Mesh(geometry_side, meterial_side);
+    // const plane_01 = new THREE.Mesh(geometry_side, meterial_side);
+    // const plane_02 = new THREE.Mesh(geometry_side, meterial_side);
+    // const plane_03 = new THREE.Mesh(geometry_side, meterial_side);
+    // const plane_04 = new THREE.Mesh(geometry_side, meterial_side);
 
-    plane.rotation.x = 4.7
-    plane_01.position.set(0, 0.52, 1.488)
-    plane_02.position.set(0, 0.52, -1.51)
-    plane_03.position.set(1.5, 0.52, 0)
-    plane_04.position.set(-1.5, 0.52, 0)
+    // Materials 객체 위치 조정
+    plane.rotation.x = -Math.PI / 2;
+    // plane_01.position.set(0, 0.52, 1.488)
+    // plane_02.position.set(0, 0.52, -1.51)
+    // plane_03.position.set(1.5, 0.52, 0)
+    // plane_04.position.set(-1.5, 0.52, 0)
 
-    plane_02.rotation.y = 3.15
-    plane_03.rotation.y = 1.565
-    plane_04.rotation.y = -1.565
+    // Materials 객체 회전 조정
+    // plane_02.rotation.y = 3.15
+    // plane_03.rotation.y = 1.565
+    // plane_04.rotation.y = -1.565
 
+    // 객체 추가
     scene.add(plane);
-    scene.add(plane_01);
-    scene.add(plane_02);
-    scene.add(plane_03);
-    scene.add(plane_04);
+    // scene.add(plane_01);
+    // scene.add(plane_02);
+    // scene.add(plane_03);
+    // scene.add(plane_04);
+    //
+    // // gui.add(plane.rotation, 'x').min(0).max(20);
+    // // gui.add(plane.rotation, 'z').min(0).max(20);
 
-    gui.add(plane.rotation, 'x').min(0).max(20);
-    gui.add(plane.rotation, 'z').min(0).max(20);
+    // const grounGeo = new THREE.PlaneGeometry(1000, 1000, 64, 64);
+    //
+    // let disMap = loader.load('/static/height_black_04.jpg');
+    //
+    // disMap.wrapS = disMap.wrapT = THREE.RepeatWrapping;
+    // disMap.repeat.set(0);
+    //
+    // const groundMat = new THREE.MeshStandardMaterial({
+    //     color: 0x000000,
+    //     wireframe: true,
+    //     displacementMap: disMap,
+    //     displacementScale: 2
+    // })
+    //
+    // groundMesh = new THREE.Mesh(grounGeo, groundMat);
+    // scene.add(groundMesh);
+    //
+    // groundMesh.rotation.x = -Math.PI / 2;
+    // groundMesh.position.y = -0.5;
 
-    // 카메라 ( 카메라 수직 시야 각도, 가로세로 종횡비율, 시야거리 시작지점, 시야거리 끝지점
-    var camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 75);
+    // 카메라 ( 카메라 수직 시야 각도, 가로세로 종횡비율, 시야거리 시작지점, 시야거리 끝지점 )
+    var camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 2000);
 
-    // 렌더러 정의 및 크기 지정, 문서에 추가하기
+    // 렌더러 정의 및 크기 지정, 문서에 추가
     var renderer = new THREE.WebGLRenderer({antialias: true, preserveDrawingBuffer: true});
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    // renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(840,680);
     document.body.appendChild(renderer.domElement);
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFShadowMap;		// <-- 속도가 빠르다
+    renderer.shadowMap.type = THREE.PCFShadowMap;
 
     // var model;
     // var land;
@@ -145,21 +176,21 @@
     // floor.position.set(0, -3, 0);
     // floor.receiveShadow=true;
 
-    // 카메라의 위치 조정
-    camera.position.set(3, 3, 2);
+    // 카메라 위치 조정
+    camera.position.set(400, 500, 0);
 
-    // 카메라가 회전하는
+    // 카메라 회전 앵글 조정
     var controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enablePan = false;
     controls.minPolarAngle = Math.PI / -2;
-    controls.maxPolarAngle = Math.PI / 3;
+    controls.maxPolarAngle = 500;
 
-    // 전체 조명을 추가합니다.
+    // 조명
     var light_base = new THREE.AmbientLight(0xf0f0f0); // soft white light
     scene.add(light_base);
 
     var light_sun = new THREE.DirectionalLight(0x808080, 1.0);
-    //light_sun.position.set( 200, 200, 300 );
+    light_sun.position.set( 200, 200, 300 );
     scene.add(light_sun);
     var shadowBlur = 10;
     light_sun.castShadow = true;
@@ -168,14 +199,14 @@
     light_sun.shadow.camera.top = shadowBlur;
     light_sun.shadow.camera.bottom = -shadowBlur;
 
-    // Water
-    var waterGeometry = new THREE.PlaneBufferGeometry(2.9, 2.9, 32, 32);
+    // 수면
+    var waterGeometry = new THREE.PlaneBufferGeometry(1000, 1000, 32, 32);
 
     var water = new THREE.Water(
             waterGeometry,
             {
-                textureWidth   : 256,
-                textureHeight  : 256,
+                textureWidth   : 8,
+                textureHeight  : 8,
                 waterNormals   : new THREE.TextureLoader().load('http://dreamplan7.cafe24.com/canvas/img/waternormals.jpg', function (texture) {
 
                     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
@@ -185,17 +216,18 @@
                 sunDirection   : light_sun.position.clone().normalize(),
                 sunColor       : 0xffffff,
                 waterColor     : 0x001e0f,
-                distortionScale: 5.7,
+                distortionScale: 1,
                 fog            : scene.fog !== undefined
             }
     );
 
+    // 수면 회전 및 위치
     water.rotation.x = -Math.PI / 2;
-    water.position.set(0, 0.65, 0);
+    water.position.set(0, 145, 0); // (x, y, z) 값이며 y 값으로 수면 높이 조정 max: 345
 
-    gui.add(water.rotation, 'x').min(0).max(20);
-    gui.add(water.rotation, 'y').min(0).max(20);
-    gui.add(water.rotation, 'z').min(0).max(20);
+    // gui.add(water.rotation, 'x').min(0).max(20);
+    // gui.add(water.rotation, 'y').min(0).max(20);
+    // gui.add(water.rotation, 'z').min(0).max(20);
 
     scene.add(water);
 
@@ -232,7 +264,7 @@
     // 초기화 부분 끝
     // ==========================
 
-    var framesPerSecond = 30;
+    var framesPerSecond = 144;
 
     // 에니메이션 효과를 자동으로 주기 위한 보조 기능입니다.
     var animate = function () {
@@ -241,7 +273,7 @@
             requestAnimationFrame(animate);
         }, 24 / framesPerSecond);
 
-        water.material.uniforms['time'].value += 1.0 / 60.0;
+        water.material.uniforms['time'].value += 5 / 60.0;
 
         // 랜더링을 수행합니다.
         renderer.render(scene, camera);
