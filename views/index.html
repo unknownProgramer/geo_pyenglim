@@ -34,7 +34,7 @@
 
     // // 텍스쳐 로드 및 높이파일 설정
     const loader = new THREE.TextureLoader();
-    const height = loader.load('/static/height_black.jpg');
+    const height = loader.load('/static/height_black_04.jpg');
 
     height.warpS = height.wrapT = THREE.RepeatWrapping;
     // const texture = loader.load('/static/texture.jpg');
@@ -114,7 +114,7 @@
     // 렌더러 정의 및 크기 지정, 문서에 추가
     var renderer = new THREE.WebGLRenderer({antialias: true, preserveDrawingBuffer: true});
     // renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setSize(840,680);
+    renderer.setSize(800,400);
     document.body.appendChild(renderer.domElement);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFShadowMap;
@@ -223,7 +223,7 @@
 
     // 수면 회전 및 위치
     water.rotation.x = -Math.PI / 2;
-    water.position.set(0, 145, 0); // (x, y, z) 값이며 y 값으로 수면 높이 조정 max: 345
+    water.position.set(0, 125, 0); // (x, y, z) 값이며 y 값으로 수면 높이 조정 max: 345
 
     // gui.add(water.rotation, 'x').min(0).max(20);
     // gui.add(water.rotation, 'y').min(0).max(20);
@@ -273,7 +273,7 @@
             requestAnimationFrame(animate);
         }, 24 / framesPerSecond);
 
-        water.material.uniforms['time'].value += 5 / 60.0;
+        water.material.uniforms['time'].value += 5 / 60.0; // 유속
 
         // 랜더링을 수행합니다.
         renderer.render(scene, camera);
