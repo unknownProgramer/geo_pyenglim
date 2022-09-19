@@ -34,10 +34,10 @@
 
     // // 텍스쳐 로드 및 높이파일 설정
     const loader = new THREE.TextureLoader();
-    const height = loader.load('/static/height_black_04.jpg');
+    const height = loader.load('/static/test_texture_height.jpg');
 
     height.warpS = height.wrapT = THREE.RepeatWrapping;
-    const texture = loader.load('/static/texture.jpg');
+    const texture = loader.load('/static/test_texture.jpg');
     //
     // Geometry                                                    // (height, width, heightSeg., widthSeg.)
     const geometry = new THREE.PlaneBufferGeometry(2000, 2000, 128, 128) // segments 가 높을수록 더 세밀한 오브젝트 생성이 가능
@@ -47,9 +47,9 @@
     // 저수지 굴곡표현
     const meterial = new THREE.MeshStandardMaterial({
         color          : '0x000000',
-        // map            : texture,
+        map            : texture,
         displacementMap: height,
-        wireframe: true,
+        // wireframe: true,
         displacementScale: 500,
         alpha: false,
     });
@@ -120,9 +120,10 @@
     // 렌더러 정의 및 크기 지정, 문서에 추가
     const renderer = new THREE.WebGLRenderer({antialias: true, preserveDrawingBuffer: true});
     // renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setSize(640,480);
+    renderer.setSize(window.innerWidth,window.innerHeight);
 
-    document.body.appendChild(renderer.domElement);
+    document.body.appendChild(renderer.domElement); // 모델 div class 에 추가
+
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFShadowMap;
 
@@ -234,7 +235,7 @@
 
     // 수면 회전 및 위치
     water.rotation.x = -Math.PI / 2;
-    water.position.set(0, 125, 0); // (x, y, z) 값이며 y 값으로 수면 높이 조정 max: 345
+    water.position.set(0, 350, 0); // (x, y, z) 값이며 y 값으로 수면 높이 조정 max: 345
 
     // gui.add(water.rotation, 'x').min(0).max(20);
     // gui.add(water.rotation, 'y').min(0).max(20);
@@ -284,7 +285,7 @@
             requestAnimationFrame(animate);
         }, 24 / framesPerSecond);
 
-        water.material.uniforms['time'].value += 0.5 / 60.0;
+        water.material.uniforms['time'].value += 2 / 60.0;
 
         // 랜더링을 수행합니다.
         renderer.render(scene, camera);
