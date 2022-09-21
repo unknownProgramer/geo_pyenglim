@@ -26,7 +26,6 @@
         integrity="sha512-Mcz+Mt8k23j06ycA5EJGfyXbtzB6xqEoJxjGftQQoed/zQzem9Lt21LRymjlcm+NUsbF0LOHgfdN8LO8GtKDOw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-    // 장면 init
     const scene = new THREE.Scene();
 
     ////////////////////////
@@ -42,7 +41,7 @@
     // 지면 init
     const geometry = new THREE.PlaneBufferGeometry(256, 256, 128, 128) // segments 가 높을수록 더 세밀한 오브젝트 생성이 가능
 
-    // 저수지 수심 init ( wireframe : 격자표현 인자 )
+    // 저수지 수심 init ( wireframe : 격자표현 )
     const meterial = new THREE.MeshStandardMaterial({
         color          : '0x000000',
         map            : texture,
@@ -110,7 +109,10 @@
     light_sun.shadow.camera.top = shadowBlur;
     light_sun.shadow.camera.bottom = -shadowBlur;
 
-    // 수면
+    ////////////////////////
+    //        WATER       //
+    ////////////////////////
+
     const waterGeometry = new THREE.PlaneBufferGeometry(256, 256, 32, 32);
 
     const water = new THREE.Water(
@@ -136,6 +138,10 @@
     water.position.set(0, 45, 0); // (x, y, z) 값이며 y 값으로 수면 높이 조정 max: 345
 
     // scene.add(water);
+
+    ////////////////////////
+    //        SKY         //
+    ////////////////////////
 
     const sky = new THREE.Sky();
 
@@ -166,9 +172,9 @@
 
     cubeCamera.update(renderer, sky);
 
-    // ==========================
-    // 초기화 부분 끝
-    // ==========================
+    ////////////////////////
+    //        ETC.        //
+    ////////////////////////
 
     const framesPerSecond = 144;
 
