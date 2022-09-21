@@ -26,99 +26,55 @@
         integrity="sha512-Mcz+Mt8k23j06ycA5EJGfyXbtzB6xqEoJxjGftQQoed/zQzem9Lt21LRymjlcm+NUsbF0LOHgfdN8LO8GtKDOw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-    // 장면
+    // 장면 init
     const scene = new THREE.Scene();
 
-    // GUI
-    const gui = new dat.GUI();
+    ////////////////////////
+    //      GEOMETRY      //
+    ////////////////////////
 
-    // // 텍스쳐 로드 및 높이파일 설정
+    // 텍스쳐 로드 및 높이파일 설정
     const loader = new THREE.TextureLoader();
-    const height = loader.load('/static/test_texture_height.png');
-
+    const height = loader.load('/static/pd_depth_black11.jpg');
+    const texture = loader.load('/static/pd_depth_color.jpg');
     height.warpS = height.wrapT = THREE.RepeatWrapping;
-    const texture = loader.load('/static/test_texture.png');
-    //
-    // Geometry                                                    // (height, width, heightSeg., widthSeg.)
-    const geometry = new THREE.PlaneBufferGeometry(2000, 2000, 128, 128) // segments 가 높을수록 더 세밀한 오브젝트 생성이 가능
-    // const geometry_side = new THREE.PlaneBufferGeometry(3, 0.5, 1, 1)
 
-    // Materials
-    // 저수지 굴곡표현
+    // 지면 init
+    const geometry = new THREE.PlaneBufferGeometry(256, 256, 128, 128) // segments 가 높을수록 더 세밀한 오브젝트 생성이 가능
+
+    // 저수지 수심 init ( wireframe : 격자표현 인자 )
     const meterial = new THREE.MeshStandardMaterial({
         color          : '0x000000',
         map            : texture,
         displacementMap: height,
         // wireframe: true,
-        displacementScale: 500,
+        displacementScale: 64,
         alpha: false,
     });
-
     meterial.side = THREE.DoubleSide;
 
-    // 양 옆 덮개 표현
-    // const meterial_side = new THREE.MeshStandardMaterial({
-    //     color: 'gray',
-    //     map  : texture
-    // });
-
-    // Materials 객체 init
+    // 지면 객체 init
     const plane = new THREE.Mesh(geometry, meterial);
-    plane
-    // const plane_01 = new THREE.Mesh(geometry_side, meterial_side);
-    // const plane_02 = new THREE.Mesh(geometry_side, meterial_side);
-    // const plane_03 = new THREE.Mesh(geometry_side, meterial_side);
-    // const plane_04 = new THREE.Mesh(geometry_side, meterial_side);
 
-    // Materials 객체 위치 조정
+    // 지면 객체 위치조정
     plane.rotation.x = -Math.PI / 2;
-    // plane_01.position.set(0, 0.52, 1.488)
-    // plane_02.position.set(0, 0.52, -1.51)
-    // plane_03.position.set(1.5, 0.52, 0)
-    // plane_04.position.set(-1.5, 0.52, 0)
 
-    // Materials 더블
-
-    // Materials 객체 회전 조정
-    // plane_02.rotation.y = 3.15
-    // plane_03.rotation.y = 1.565
-    // plane_04.rotation.y = -1.565
-
-    // 객체 추가
+    // 지면 객체 추가
     scene.add(plane);
-    // scene.add(plane_01);
-    // scene.add(plane_02);
-    // scene.add(plane_03);
-    // scene.add(plane_04);
-    //
-    // // gui.add(plane.rotation, 'x').min(0).max(20);
-    // // gui.add(plane.rotation, 'z').min(0).max(20);
 
-    // const grounGeo = new THREE.PlaneGeometry(1000, 1000, 64, 64);
-    //
-    // let disMap = loader.load('/static/height_black_04.jpg');
-    //
-    // disMap.wrapS = disMap.wrapT = THREE.RepeatWrapping;
-    // disMap.repeat.set(0);
-    //
-    // const groundMat = new THREE.MeshStandardMaterial({
-    //     color: 0x000000,
-    //     wireframe: true,
-    //     displacementMap: disMap,
-    //     displacementScale: 2
-    // })
-    //
-    // groundMesh = new THREE.Mesh(grounGeo, groundMat);
-    // scene.add(groundMesh);
-    //
-    // groundMesh.rotation.x = -Math.PI / 2;
-    // groundMesh.position.y = -0.5;
+    ////////////////////////
+    //       CAMERA       //
+    ////////////////////////
 
-    // 카메라 ( 카메라 수직 시야 각도, 가로세로 종횡비율, 시야거리 시작지점, 시야거리 끝지점 )
-    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 2500);
+    // 카메라 init ( 카메라 수직 시야 각도, 가로세로 종횡비율, 시야거리 시작지점, 시야거리 끝지점 )
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 500);
 
     // 렌더러 정의 및 크기 지정, 문서에 추가
-    const renderer = new THREE.WebGLRenderer({antialias: true, preserveDrawingBuffer: true});
+    const renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        preserveDrawingBuffer: true
+    });
+
     // renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setSize(1024,786);
 
@@ -127,75 +83,18 @@
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFShadowMap;
 
-    // const model;
-    // const land;
+    // 카메라 초기 위치 조정
+    camera.position.set(150, 150, 50);
 
-    // const loader = new THREE.TextureLoader();
-    // const loaderMesh = new THREE.ColladaLoader();
-
-    // loaderMesh.load(
-    //         'http://dreamplan7.cafe24.com/canvas/img/home.dae',
-    //         function ( collada ){
-    //           model = collada.scene;
-    //           const i;
-    //           for(i=0;i<model.children.length;++i)
-    //             model.children[i].castShadow=true;
-    //           model.rotation.x= -90 * ( Math.PI / 180 );
-    //           model.rotation.z= -90 * ( Math.PI / 180 );
-    //           model.position.set(0,3,0);
-    //           scene.add( model );
-    //         });
-    //
-    // loaderMesh.load(
-    //         'http://dreamplan7.cafe24.com/canvas/dae/island2.dae',
-    //         function ( collada ){
-    //           land = collada.scene;
-    //           loader.load(
-    //                   'http://dreamplan7.cafe24.com/canvas/dae/rock05.jpg',
-    //                   function ( texture ) {
-    //                     land.children[0].material = new THREE.MeshStandardMaterial({map: texture});
-    //                     land.children[0].castShadow=true;
-    //                   }
-    //           );
-    //           land.scale.set(300,300,300);
-    //           land.position.set(0,-50,50);
-    //           land.rotation.x= -90 * ( Math.PI / 180 );
-    //
-    //           scene.add( land );
-    //         });
-
-    // 바닥
-    // const floor;
-    // floor = new THREE.Mesh(
-    //         new THREE.BoxGeometry(10, 10, 10)
-    // );
-    // loader.load(
-    //         'http://dreamplan7.cafe24.com/canvas/img/floor1.jpg',
-    //         function ( texture ) {
-    //           floor.material = new THREE.MeshStandardMaterial({map: texture});
-    //           floor.material.map.repeat.x=3;
-    //           floor.material.map.repeat.y=3;
-    //           floor.material.map.wrapS=THREE.RepeatWrapping;
-    //           floor.material.map.wrapT=THREE.RepeatWrapping;
-    //         }
-    // );
-    // scene.add(floor);
-    //
-    // floor.position.set(0, -3, 0);
-    // floor.receiveShadow=true;
-
-    // 카메라 위치 조정
-    camera.position.set(450, 550, 0);
-
-    // 카메라 회전 앵글 조정
+    // 카메라 컨트롤 init 및 시야각도 최대, 최소 조정
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enablePan = false;
     controls.minPolarAngle = Math.PI / -2;
-    controls.maxPolarAngle = 1;
+    controls.maxPolarAngle = 10;
 
-    // 카메라 줌 조정
-    controls.minDistance = 550;
-    controls.maxDistance = 1500;
+    // 카메라 최소, 최대 줌 조정
+    controls.minDistance = 100;
+    controls.maxDistance = 250;
 
     // 조명
     const light_base = new THREE.AmbientLight(0xf0f0f0); // soft white light
@@ -212,36 +111,31 @@
     light_sun.shadow.camera.bottom = -shadowBlur;
 
     // 수면
-    const waterGeometry = new THREE.PlaneBufferGeometry(2000, 2000, 32, 32);
+    const waterGeometry = new THREE.PlaneBufferGeometry(256, 256, 32, 32);
 
     const water = new THREE.Water(
             waterGeometry,
             {
-                textureWidth   : 8,
-                textureHeight  : 8,
+                textureWidth   : 128,
+                textureHeight  : 128,
                 waterNormals   : new THREE.TextureLoader().load('http://dreamplan7.cafe24.com/canvas/img/waternormals.jpg', function (texture) {
 
                     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 
                 }),
-                alpha          : 1.0,
+                alpha          : true,
                 sunDirection   : light_sun.position.clone().normalize(),
                 sunColor       : 0xffffff,
-                waterColor     : 0x001e0f,
-                distortionScale: 1,
-                fog            : scene.fog !== undefined
+                // waterColor     : 0x000000,
+                distortionScale: 16,
             }
     );
 
     // 수면 회전 및 위치
     water.rotation.x = -Math.PI / 2;
-    water.position.set(0, 0, 0); // (x, y, z) 값이며 y 값으로 수면 높이 조정 max: 345
+    water.position.set(0, 45, 0); // (x, y, z) 값이며 y 값으로 수면 높이 조정 max: 345
 
-    // gui.add(water.rotation, 'x').min(0).max(20);
-    // gui.add(water.rotation, 'y').min(0).max(20);
-    // gui.add(water.rotation, 'z').min(0).max(20);
-
-    scene.add(water);
+    // scene.add(water);
 
     const sky = new THREE.Sky();
 
@@ -290,9 +184,8 @@
         // 랜더링을 수행합니다.
         renderer.render(scene, camera);
     };
-
-    // animate()함수를 최초에 한번은 수행해주어야 합니다.
     animate();
+
 </script>
 </body>
 </html>
