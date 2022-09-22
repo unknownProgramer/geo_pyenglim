@@ -30,7 +30,7 @@
 			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 			import { Water } from 'three/addons/objects/Water2.js';
 
-			let scene, camera, clock, renderer, water;
+            let scene, camera, clock, renderer, water;
 
 			let params = {
 				'담수 색상': '#ffffff',
@@ -71,27 +71,70 @@
                 const texture = loader.load('/static/pd_depth_color.jpg');
                 height.warpS = height.wrapT = THREE.RepeatWrapping;
 
-                // 지면 init
-                const geometry = new THREE.PlaneGeometry(256, 256, 64, 64) // segments 가 높을수록 더 세밀한 오브젝트 생성이 가능
-
-                // 저수지 수심 init ( wireframe : 격자표현 )
+                // 평림댐 지형 init
+                const geometry = new THREE.PlaneGeometry(256, 256, 64, 64)
                 const material = new THREE.MeshStandardMaterial({
                     color          : '#ffffff',
                     map            : texture,
                     displacementMap: height,
+                    // wireframe 속성은 격자형식으로 표현되며 사용할 경우 displacementMap 속성 주석처리 권장
                     // wireframe: true,
                     displacementScale: 64
                 });
                 material.side = THREE.DoubleSide;
 
-                // 지면 객체 init
-                const plane = new THREE.Mesh(geometry, material);
+                // // 박스 init
+                // const box_side = new THREE.BoxGeometry(257, 50, 257)
+                // const box_material = new THREE.MeshLambertMaterial({
+                //     color : 0x5B3C1A
+                // })
 
-                // 지면 객체 위치조정
+                // GEOMETRY 객체 init
+                const plane = new THREE.Mesh(geometry, material);
+                // const box01 = new THREE.Mesh(box_side, box_material);
+                // const box02 = new THREE.Mesh(box_side, box_material);
+                // const box03 = new THREE.Mesh(box_side, box_material);
+                // const box04 = new THREE.Mesh(box_side, box_material);
+
+                // 평림댐 지형객체 위치조정
                 plane.rotation.x = -Math.PI / 2;
 
-                // 지면 객체 추가
+                // BOX 객체 위치조정
+                // box01.position.y = 40;
+                //
+                // box02.position.x = 128.5;
+                // box02.position.y = 40;
+                // box02.rotation.y = Math.PI / 2;
+                //
+                // box03.position.y = 40;
+                // box03.position.z = -128.5;
+                //
+                // box04.position.x = -128.5;
+                // box04.position.y = 40;
+                // box04.rotation.y = Math.PI / 2;
+
+                // // 취수탑 init
+                // const tower = new THREE.BoxGeometry(256, 50, 256);
+                // const tower_obj = new THREE.Mesh( tower, new THREE.MeshLambertMaterial({
+                //     color : 0xD7F1FA
+                // }))
+
+                // 포인터 객체 위치 조정
+                // tower_obj.position.x = 62;
+                // tower_obj.position.y = 20;
+                // tower_obj.position.z = 83;
+                // tower_obj.rotation.y = Math.PI / 2;
+
+                plane.renderOrder = 0 ;
+
+                // 객체 추가
+                // scene.add(tower_obj);
                 scene.add(plane);
+                // scene.add(box01);
+                // scene.add(box02);
+                // scene.add(box03);
+                // scene.add(box04);
+
 
                 ///////////////////
                 //     WATER     //
