@@ -25,7 +25,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.9/dat.gui.js"
         integrity="sha512-Mcz+Mt8k23j06ycA5EJGfyXbtzB6xqEoJxjGftQQoed/zQzem9Lt21LRymjlcm+NUsbF0LOHgfdN8LO8GtKDOw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <script>
+
     const scene = new THREE.Scene();
 
     ////////////////////////
@@ -42,7 +44,7 @@
     const geometry = new THREE.PlaneBufferGeometry(256, 256, 128, 128) // segments 가 높을수록 더 세밀한 오브젝트 생성이 가능
 
     // 저수지 수심 init ( wireframe : 격자표현 )
-    const meterial = new THREE.MeshStandardMaterial({
+    const material = new THREE.MeshStandardMaterial({
         color          : '0x000000',
         map            : texture,
         displacementMap: height,
@@ -50,10 +52,10 @@
         displacementScale: 64,
         alpha: false,
     });
-    meterial.side = THREE.DoubleSide;
+    material.side = THREE.DoubleSide;
 
     // 지면 객체 init
-    const plane = new THREE.Mesh(geometry, meterial);
+    const plane = new THREE.Mesh(geometry, material);
 
     // 지면 객체 위치조정
     plane.rotation.x = -Math.PI / 2;
@@ -191,7 +193,7 @@
         renderer.render(scene, camera);
     };
     animate();
-
 </script>
+
 </body>
 </html>
