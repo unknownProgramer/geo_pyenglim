@@ -34,7 +34,7 @@
 
 			let params = {
 				'담수 색상': '#ffffff',
-                '담수 높이' : 30
+                '담수 높이' : 40
 			};
 
 			init();
@@ -83,11 +83,11 @@
                 });
                 material.side = THREE.DoubleSide;
 
-                // // 박스 init
-                // const box_side = new THREE.BoxGeometry(257, 50, 257)
-                // const box_material = new THREE.MeshLambertMaterial({
-                //     color : 0x5B3C1A
-                // })
+                // 박스 init
+                const box_side = new THREE.BoxGeometry(257, 50, 257)
+                const box_material = new THREE.MeshLambertMaterial({
+                    color : 0x5B3C1A
+                })
 
                 // GEOMETRY 객체 init
                 const plane = new THREE.Mesh(geometry, material);
@@ -230,7 +230,7 @@
 
 				requestAnimationFrame( animate );
 
-                // scene.rotation.y += 0.02;
+                scene.rotation.y += 0.02;
 
 				render();
 
